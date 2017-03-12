@@ -2,7 +2,6 @@ import matplotlib.pyplot as plt
 from random import randint
 import random
 
-
 class PerceptronLearner:
     dataset=[]
     vals=[]
@@ -10,7 +9,7 @@ class PerceptronLearner:
     threshold=0
     step=0
     updates=0
-    minx=0;
+    minx=0
     maxx=0
     def __init__(self, dataset,values,weights,threshold,step,minx,maxx):
         self.dataset=dataset
@@ -44,14 +43,11 @@ class PerceptronLearner:
         while(True):
             error=0
             for i in range(0,len(self.dataset)):
-                # print self.dataset[i]
                 if(self.matches(self.dataset[i],self.vals[i])==False):
                     error=1
-                    # self.plot()
                     self.updates = self.updates + 1
                     self.rearrange(self.step,i)
 
-                    # print "new w",self.w," threshold :",self.threshold
             if(error == 0):
                 break
 
@@ -77,16 +73,30 @@ class PerceptronLearner:
                 ys.append(self.dataset[i][1])
 
         plt.scatter(xs, ys, color='blue')
-        length = self.maxx;
+        length = self.maxx
 
         xcoord = [length]
         ycoord = [-(length * self.w[0] +self.threshold) / self.w[1]]
-        # print xcoord,ycoord
-        length=-self.minx;
+
+        length=-self.minx
         xcoord.append(-1 * length)
         ycoord.append(-(self.threshold - length * self.w[0]) / self.w[1])
-        # print xcoord,ycoord
+
         plt.plot(xcoord, ycoord, color='orange')
+
+        # plt.show()
+
+        length = self.maxx
+
+        xcoord = [length]
+        ycoord = [10-(length * self.w[0]  + self.threshold) / self.w[1]]
+
+        length = -self.minx
+        xcoord.append(-1 * length)
+        ycoord.append(-10-(self.threshold - length * self.w[0]) / self.w[1])
+
+        plt.plot(xcoord, ycoord, color='green')
+
         plt.show()
 
 def main():
@@ -120,9 +130,6 @@ def main():
 
     print dataset
     vals = [1,1,1,1,1,1,1,1,1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
-    #
-    # dataset=[[-2,1],[1,1],[3,-1],[-2,-1],[-1,-2],[2,-2]]
-    # vals=[1,1,1,-1,-1,-1]
 
     w = []
     x1=randint(-10,10)
