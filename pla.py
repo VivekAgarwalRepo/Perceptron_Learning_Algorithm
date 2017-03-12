@@ -1,6 +1,70 @@
-import matplotlib.pyplot as plt
 from random import randint
-import random
+import matplotlib.pyplot as plt
+
+
+class RegressionClassifier:
+    dataset = []
+    minx = 0
+    maxx = 0
+    b0=0;
+    b1=0;
+
+    def __init__(self,minx,maxx,dataset):
+        self.minx=minx
+        self.maxx=maxx
+        self.dataset=dataset
+
+    def makeRegressionCoefficients(self):
+
+        xdiff=[]
+        ydiff=[]
+        xdiffsq=[]
+        ydiffsq=[]
+        product=[]
+        total=0
+        for i in range(0,len(self.dataset)):
+            total=total+self.dataset[i][0]
+
+        xavg=total/len(self.dataset)
+        total=0
+
+        for i in range(0,len(self.dataset)):
+            total=total+self.dataset[i][1]
+
+        yavg=total/len(self.dataset)
+
+        for i in range(0,len(self.dataset)):
+            xdiff.append(self.dataset[i][0]-xavg)
+            ydiff.append(self.dataset[i][1]-yavg)
+
+        for i in range(0,len(self.dataset)):
+            xdiffsq.append(xdiff[i]*xdiff[i])
+            ydiffsq.append(ydiff[i]*ydiff[i])
+            product.append(xdiff[i]*ydiff[i])
+
+        self.b1=sum(product)/sum(xdiffsq)
+        self.b0=yavg-self.b1*xavg
+
+
+    def plot(self):
+        xs = []
+        ys = []
+
+        for i in range(0, len(self.dataset)):
+                xs.append(self.dataset[i][0])
+                ys.append(self.dataset[i][1])
+
+        plt.scatter(xs, ys, color='red')
+
+        length = self.maxx
+
+        xcoord = [length]
+        ycoord = [self.b0+length*self.b1]
+
+        length = -self.minx
+        xcoord.append(-1 * length)
+        ycoord.append(self.b0+length*self.b1*-1)
+        plt.plot(xcoord, ycoord, color='black')
 
 class PerceptronLearner:
     dataset=[]
@@ -95,7 +159,7 @@ class PerceptronLearner:
         xcoord.append(-1 * length)
         ycoord.append(-10-(self.threshold - length * self.w[0]) / self.w[1])
 
-        plt.plot(xcoord, ycoord, color='green')
+        plt.plot(xcoord, ycoord, color='purple')
 
         plt.show()
 
@@ -128,7 +192,6 @@ def main():
             maxx = weight
         dataset.append(pair)
 
-    print dataset
     vals = [1,1,1,1,1,1,1,1,1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
 
     w = []
@@ -137,13 +200,20 @@ def main():
 
     w.append(x1)
     w.append(x2)
-    print w
+
     threshold=randint(-5,5)
     step = 6
+
+
+    regressor = RegressionClassifier(minx,maxx,dataset)
+    regressor.makeRegressionCoefficients()
+    regressor.plot()
+
     pla=PerceptronLearner(dataset,vals,w,threshold,step,minx,maxx)
     pla.train()
     pla.plot()
     print "Total updates :",pla.updates
-    print pla.w,pla.threshold
+
+
 if __name__ == "__main__":
     main()
